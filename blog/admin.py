@@ -1,9 +1,7 @@
 from django.contrib import admin
-from .models import Post, Tag
+from .models import Post, Tag, Comment
 # Register your models here.
 
-
-admin.site.register(Tag)
 
 
 """To configure how the admin site behaves with a certain model, a subclass of admin.ModelAdmin 
@@ -23,5 +21,6 @@ When used in this way, some JavaScript is inserted into the admin page so that t
 updates when the title field changes. It will automatically “slugify” the title. 
 But, there are many other ways to customise the ModelAdmin."""
 
-
+admin.site.register(Tag)
 admin.site.register(Post, PostAdmin)
+admin.site.register(Comment)
