@@ -18,12 +18,16 @@ This is actually a three step process:
 from django.contrib.auth import get_user_model
 from django import template   # Step1: import django template
 
+
+from blog.models import Post
+
+
 # safe html
 from django.utils.html import escape, format_html
 from django.utils.safestring import mark_safe
 
+register = template.Library()   #Step2, used to register custom templates and filters
 
-register = template.Library()   #Step2
 user_model = get_user_model()
 
 
@@ -56,6 +60,7 @@ We can do it in a single step:
 prefix = format_html('<a href="mailto:{}">', author.email)
 """
 
+# custom filter
 @register.filter
 def author_details(author, current_user=None):
   # Note the use of isinstance to check that we’re working with a User object, 
@@ -82,3 +87,75 @@ def author_details(author, current_user=None):
     suffix = ""
   
   return format_html("{}{}{}", prefix, name, suffix) # mark_safe(f"{prefix}{name}{suffix}")
+
+
+#author_detail template tag with context enabled
+# @register.simple_tag(takes_context=True)
+# def author_details_tag(context):
+#     request = context["request"]
+#     current_user = request.user
+#     post = context["post"]
+#     author = post.author
+
+#     if author == current_user:
+#         return format_html("<strong>me</strong>")
+
+#     if author.first_name and author.last_name:
+#         name = f"{author.first_name} {author.last_name}"
+#     else:
+#         name = f"{author.username}"
+
+#     if author.email:
+#         prefix = format_html('<a href="mailto:{}">', author.email)
+#         suffix = format_html("</a>")
+#     else:
+#         prefix = ""
+#         suffix = ""
+
+#     return format_html("{}{}{}", prefix, name, suffix)
+
+
+# custom tag, simple_tag is the name of tag
+
+#extra-classes can take other classes like that of bootstrap border-bottom in example
+@register.simple_tag
+def row(extra_classes=""):
+  return format_html('<div class="row">', extra_classes)
+
+@register.simple_tag
+def endrow():
+  return format_html('</div>')
+
+
+# output the opening and closing tags for a Bootstrap. 
+# {} is the holder for other classes passed as argument.
+@register.simple_tag
+def col(extra_classes=""):
+    return format_html('<div class="col {}">', extra_classes)
+
+
+@register.simple_tag
+def endcol():
+    return format_html("</div>")
+
+
+"""
+Include templates
+This is very simple to implement, but its main drawback is that included templates can 
+only access variables that are already in the including template’s context. That means
+any extra variables need to be passed in from the calling view, so if it’s a template 
+that’s used in lots of places you’ll be repeating the data-loading code in lots of 
+different views.
+By using an inclusion tag, you can query for extra data inside your template tag 
+function, which can then be used to render a template.
+Inclusion tags are registered with the Library.inclusion_tag function. 
+This has one required argument, the name of the template to render. 
+Unlike simple tags, inclusion tags don’t return a string to render. 
+They return a context dictionary, which is used to render template used during 
+registration.
+"""
+
+@register.inclusion_tag("blog/post-list.html")
+def recent_posts(post):
+  posts = Post.objects.exclude(pk=post.pk)[:5]  # get last 5 after exclusion as they will be latest
+  return {"title": "Recent posts", "posts":posts}
