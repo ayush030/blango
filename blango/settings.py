@@ -45,6 +45,8 @@ class Dev(Configuration):
   CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
   CRISPY_TEMPLATE_PACK = "bootstrap5"
 
+  INTERNAL_IPS = ["192.168.11.179"] # to access the django_debug_toolbar
+
   # Application definition
 
   INSTALLED_APPS = [
@@ -58,6 +60,7 @@ class Dev(Configuration):
       #other apps
       'crispy_forms',
       'crispy_bootstrap5',
+      'debug_toolbar',  #for django_debug_toolbar
       
       # user defined apps
       'blango',
@@ -65,6 +68,9 @@ class Dev(Configuration):
   ]
 
   MIDDLEWARE = [
+        # for django_debug_toolbar
+      "debug_toolbar.middleware.DebugToolbarMiddleware",
+
       'django.middleware.security.SecurityMiddleware',
       'django.contrib.sessions.middleware.SessionMiddleware',
       'django.middleware.common.CommonMiddleware',

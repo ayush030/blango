@@ -22,12 +22,12 @@ class Comment(models.Model):
   content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
   
   #to get value of the pk of the said content_object.  PK of the related object(Post or User)
-  object_id = models.PositiveIntegerField()
+  object_id = models.PositiveIntegerField(db_index=True)
 
   # its a foreign key to generic object with mapping to its ContentType and its pk 
   content_object = GenericForeignKey("content_type", "object_id")
 
-  created_at = models.DateTimeField(auto_now_add = True)
+  created_at = models.DateTimeField(auto_now_add = True, db_index=True)
   modified_at = models.DateTimeField(auto_now = True)
 
   def __str__(self):
@@ -39,7 +39,7 @@ class Post(models.Model):
   author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
   created_at = models.DateTimeField(auto_now_add=True)
   modified_at = models.DateTimeField(auto_now=True)
-  published_at = models.DateTimeField(blank=True, null = True)
+  published_at = models.DateTimeField(blank=True, null = True, db_index=True)
   title = models.TextField(max_length=100)
   
   #SlugField in Django is like a CharField, where you can specify max_length attribute also. 
