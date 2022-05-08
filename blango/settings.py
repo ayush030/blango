@@ -213,6 +213,40 @@ class Dev(Configuration):
       },
   }
 
+  #pymemcache configuration
+  CACHES = {
+    #Memcache  
+    # "default": {
+    #     "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
+    #     "LOCATION": ["127.0.0.1:11211",],
+    # }
+
+    #database caching
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "my_cache_table",
+    }
+
+    #filesystem cache
+    # "default": {
+    #     "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+    #     "LOCATION": "/var/tmp/django_cache",
+    # }
+
+
+    #inmemory caching - inside Python process
+    #This is actually the default backend that Django uses, and it’s good for development as you can test caching without setting up any external services.
+    # "default": {
+    #     "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    #     "LOCATION": "unique-snowflake",
+    # }
+
+    #dummy CACHESCACHES = {
+    # "default": {
+    #     "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+    # }
+  }
+
 
 class Prod(Dev):
     #DEBUG = False

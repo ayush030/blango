@@ -21,6 +21,11 @@ from django import template   # Step1: import django template
 
 from blog.models import Post
 
+import logging
+
+
+logger = logging.getLogger(__name__)
+
 
 # safe html
 from django.utils.html import escape, format_html
@@ -158,4 +163,7 @@ registration.
 @register.inclusion_tag("blog/post-list.html")
 def recent_posts(post):
   posts = Post.objects.exclude(pk=post.pk)[:5]  # get last 5 after exclusion as they will be latest
+ 
+  # to test template caching
+  logger.debug("Loaded %d recent posts for post %d", len(posts), post.pk)
   return {"title": "Recent posts", "posts":posts}

@@ -6,13 +6,33 @@ from .forms import CommentForm
 
 import logging
 
+#view caching or caching the response of the full page
+from django.views.decorators.cache import cache_page
 
+#cookie configuration
+from django.views.decorators.vary import vary_on_headers, vary_on_cookie
 logger = logging.getLogger(__name__)
 
+#accessing caches
+# from django.core.cache import caches
+# default_caches = caches.["default"]
+
+from django.core.cache import cache
+# cache is the equivalent of caches["default"]/our default_cache variable
+
+#caches the response for 300 sec 
+# @cache_page(300)
+# @vary_on_headers("Cookie") #or vary_on_cookie
 def index(request):
+    # #demo for cache_page and cookie test
+    # from django.http import HttpResponse
+    # return HttpResponse(str(request.user).encode("ascii"))
+
     posts = Post.objects.filter(published_at__lte=timezone.now()) #lte = less than equal to
 
     logger.debug("Got %d posts", len(posts))
+    
+    cache.set(f"post_count", len(posts, 30)
 
     return render(request, "blog/index.html", {"posts": posts})
 
