@@ -47,6 +47,10 @@ class Dev(Configuration):
 
   INTERNAL_IPS = ["192.168.11.179"] # to access the django_debug_toolbar
 
+
+# custom user auth model
+  AUTH_USER_MODEL = "blango_auth.User"
+
   # Application definition
 
   INSTALLED_APPS = [
@@ -64,7 +68,9 @@ class Dev(Configuration):
       
       # user defined apps
       'blango',
+      'blango_auth',
       'blog',
+      
   ]
 
   MIDDLEWARE = [

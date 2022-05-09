@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Tag, Comment
+from .models import Post, Tag, Comment, AuthorProfile
 # Register your models here.
 
 
@@ -24,3 +24,4 @@ But, there are many other ways to customise the ModelAdmin."""
 admin.site.register(Tag)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Comment)
+admin.site.register(AuthorProfile)
