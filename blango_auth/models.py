@@ -45,8 +45,8 @@ class User(AbstractUser):
   
   objects = BlangoUserManager()
 
-  USERNAME_FIELD = "email"
+  USERNAME_FIELD = "email"  # by default is unique and default
   REQUIRED_FIELDS = []
 
-  def __str__():
+  def __str__(self):
     return self.email
