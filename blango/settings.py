@@ -50,6 +50,11 @@ class Dev(Configuration):
 
 # custom user auth model
   AUTH_USER_MODEL = "blango_auth.User"
+  
+
+  # django_registration settings
+  EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"  # or any other SMTP server
+  ACCOUNT_ACTIVATION_DAYS = 7
 
   # Application definition
 
