@@ -48,7 +48,7 @@ class Dev(Configuration):
   INTERNAL_IPS = ["192.168.11.179"] # to access the django_debug_toolbar
 
 
-# custom user auth model
+# custom user auth model; must be of the form 'app_label.ModelName'." % model
   AUTH_USER_MODEL = "blango_auth.User"
   
 
