@@ -16,4 +16,7 @@ urlpatterns=[
 
   # django default user registration system. #This is the package that includes all the inbuild django auth view. That also sets up the views from django.contrib.auth (login, logout, password reset, etc.).
   path('', include('django.contrib.auth.urls')),
+
+  # allauth urls
+  path('', include("allauth.urls")),
 ]

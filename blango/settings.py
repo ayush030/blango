@@ -56,6 +56,16 @@ class Dev(Configuration):
   EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"  # or any other SMTP server
   ACCOUNT_ACTIVATION_DAYS = 7
 
+  #Allauth site object to which settings applies to 
+  SITE_ID = 1
+
+  
+  # tell django allauth model:
+  ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # There is no username field on the User model.
+  ACCOUNT_EMAIL_REQUIRED = True             #The third-party provider must provide an email address when authenticating
+  ACCOUNT_USERNAME_REQUIRED = False         # The username of the User is not required. 
+  ACCOUNT_AUTHENTICATION_METHOD = "email"   # The user authenticates by entering their email address.
+
   # Application definition
 
   INSTALLED_APPS = [
@@ -64,12 +74,22 @@ class Dev(Configuration):
       'django.contrib.contenttypes',
       'django.contrib.sessions',
       'django.contrib.messages',
+
+      #oauth identification
+      'django.contrib.sites',
+
       'django.contrib.staticfiles',
 
       #other apps
       'crispy_forms',
       'crispy_bootstrap5',
       'debug_toolbar',  #for django_debug_toolbar
+
+      #for django allauth verification
+      "allauth", 
+      "allauth.account", 
+      "allauth.socialaccount", 
+      "allauth.socialaccount.providers.google",
       
       # user defined apps
       'blango',
