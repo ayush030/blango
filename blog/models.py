@@ -44,7 +44,7 @@ class Post(models.Model):
   
   #SlugField in Django is like a CharField, where you can specify max_length attribute also. 
   #If max_length is not specified, Django will use a default length of 50. 
-  slug = models.SlugField()
+  slug = models.SlugField(unique=True)
 
   summary = models.TextField(max_length=500)
   content = models.TextField()
