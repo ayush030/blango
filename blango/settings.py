@@ -84,6 +84,7 @@ class Dev(Configuration):
       'crispy_forms',
       'crispy_bootstrap5',
       'debug_toolbar',  #for django_debug_toolbar
+      'rest_framework',
 
       #for django allauth verification
       "allauth", 
@@ -94,8 +95,7 @@ class Dev(Configuration):
       # user defined apps
       'blango',
       'blango_auth',
-      'blog',
-      
+      'blog', 
   ]
 
   MIDDLEWARE = [
