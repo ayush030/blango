@@ -84,7 +84,9 @@ class Dev(Configuration):
       'crispy_forms',
       'crispy_bootstrap5',
       'debug_toolbar',  #for django_debug_toolbar
-      'rest_framework',
+      
+      'rest_framework', #DRF
+      'rest_framework.authtoken',   #DRF token authentication
 
       #for django allauth verification
       "allauth", 
@@ -282,6 +284,15 @@ class Dev(Configuration):
     # "default": {
     #     "BACKEND": "django.core.cache.backends.dummy.DummyCache",
     # }
+  }
+
+  #Token Authentication
+  REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+    ]
   }
 
 

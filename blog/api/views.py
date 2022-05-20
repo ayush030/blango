@@ -19,3 +19,6 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
   #get, post, delete implementation together
   queryset= Post.objects.all()
   serializer_class= PostSerializer
+
+# use this for token authentication
+# requests.get("http://127.0.0.1:8000/api/v1/posts/", headers={"Authorization": "Token <token_val>"})
