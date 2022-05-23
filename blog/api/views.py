@@ -6,8 +6,9 @@
 
 from rest_framework import generics
 
-from blog.api.serializers import PostSerializer
+from blog.api.serializers import PostSerializer, UserSerializer
 from blog.models import Post
+from blango_auth.models import User
 
 
 #implementation DRF view bases permissions
@@ -33,3 +34,8 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
 
 # use this for token authentication
 # requests.get("http://127.0.0.1:8000/api/v1/posts/", headers={"Authorization": "Token <token_val>"})
+
+class UserDetail(generics.RetrieveAPIView):
+    lookup_field = "email"
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
