@@ -6,7 +6,7 @@
 
 from rest_framework import generics
 
-from blog.api.serializers import PostSerializer, UserSerializer
+from blog.api.serializers import PostSerializer, UserSerializer, PostDetailSerializer
 from blog.models import Post
 from blango_auth.models import User
 
@@ -30,7 +30,7 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
 
 #get, post, delete implementation together
   queryset= Post.objects.all()
-  serializer_class= PostSerializer
+  serializer_class= PostDetailSerializer
 
 # use this for token authentication
 # requests.get("http://127.0.0.1:8000/api/v1/posts/", headers={"Authorization": "Token <token_val>"})
