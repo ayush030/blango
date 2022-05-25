@@ -2,6 +2,11 @@ from rest_framework import serializers
 from blog.models import Post, Tag, Comment
 from blango_auth.models import User
 
+# To update the foreign fields for a serializer we use serializer.relatedField which have two functions: 
+# to_representation and to_internal_value. to_representation is used to modify the GET body for your API 
+# and to_internal_value is used to validate the update request for your serializer, for example, it will 
+# help you in checking if the request for updating relatedField is present in the other table or not and things like that.
+
 
 class TagField(serializers.SlugRelatedField):
   def to_internal_value(self, data):
