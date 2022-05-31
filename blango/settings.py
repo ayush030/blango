@@ -88,6 +88,9 @@ class Dev(Configuration):
       'rest_framework', #DRF
       'rest_framework.authtoken',   #DRF token authentication
 
+      #drf swagger UI
+      'drf_yasg', 
+
       #for django allauth verification
       "allauth", 
       "allauth.account", 
@@ -298,6 +301,14 @@ class Dev(Configuration):
       "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ]
   }
+
+  #drf-yasg settings
+  SWAGGER_SETTINGS = {
+      "SECURITY_DEFINITIONS": {
+          "Token": {"type": "apiKey", "name": "Authorization", "in": "header"},
+          "Basic": {"type": "basic"},
+        }
+    }
 
 
 class Prod(Dev):
