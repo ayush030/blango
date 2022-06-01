@@ -6,8 +6,8 @@
 
 from rest_framework import generics
 
-from blog.api.serializers import PostSerializer, UserSerializer, PostDetailSerializer
-from blog.models import Post
+from blog.api.serializers import PostSerializer, UserSerializer, PostDetailSerializer, TagSerializer
+from blog.models import Post, Tag
 from blango_auth.models import User
 
 
@@ -16,26 +16,70 @@ from rest_framework.permissions import IsAdminUser
 from blog.api.permissions import AuthorModifyOrReadOnly, IsAdminUserForObject
 
 
-class PostList(generics.ListCreateAPIView):
-  # get and post implementation together
-  permission_classes = [IsAdminUser]
+#viewsets for Tag
+from rest_framework import generics, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+
+#generic implementation using APIView 
+
+# class PostList(generics.ListCreateAPIView):
+#   # get and post implementation together
+#   permission_classes = [IsAdminUser]
   
-  queryset = Post.objects.all()
-  serializer_class= PostSerializer
+#   queryset = Post.objects.all()
+#   serializer_class= PostSerializer
 
-class PostDetail(generics.RetrieveUpdateDestroyAPIView):
-  #  IsAdminUser always returns True from has_object_permission(), even if a user isn’t logged in! So by using it we’ll give all permissions to everyone.
-  # permission_classes = [AuthorModifyOrReadOnly | IsAdminUser]
-  permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject]
+# class PostDetail(generics.RetrieveUpdateDestroyAPIView):
+#   #  IsAdminUser always returns True from has_object_permission(), even if a user isn’t logged in! So by using it we’ll give all permissions to everyone.
+#   # permission_classes = [AuthorModifyOrReadOnly | IsAdminUser]
+#   permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject]
 
-#get, post, delete implementation together
-  queryset= Post.objects.all()
-  serializer_class= PostDetailSerializer
+# #get, post, delete implementation together
+#   queryset= Post.objects.all()
+#   serializer_class= PostDetailSerializer
 
 # use this for token authentication
 # requests.get("http://127.0.0.1:8000/api/v1/posts/", headers={"Authorization": "Token <token_val>"})
+
+
+
+# implementating viewset based Post views
+class PostViewSet(viewsets.ModelViewSet):
+  queryset = Post.objects.all()
+  permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject]
+
+  def get_serializer_class(self):
+    if self.action in ("list", "create"):
+      return PostSerializer
+    return PostDetailSerializer
+
 
 class UserDetail(generics.RetrieveAPIView):
     lookup_field = "email"
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+#Tag viewset
+
+class TagViewSet(viewsets.ModelViewSet):
+  queryset = Tag.objects.all()
+  serializer_class = TagSerializer
+
+# methods: A list of HTTP methods that the action will respond to. Defaults to ["get"].
+# detail: Determines if the action should apply to detail requests (if True) or list (if False). This argument is required.
+# url_path: Manually specify the path to be used in the URL. Defaults to the method name (e.g. posts).
+# url_name: Manually specify the name of the URL pattern. Defaults to the method name with underscores replaced by dashes. The full name of our method’s URL is tag-posts.
+# name: A name to display in the Extra Actions menu in the DRF GUI. Defaults to the name of the method.
+  
+  @action(methods=["get"], detail=True, name="Posts with the tag")
+  def posts(self, request, pk=None):
+    # We have access to the pk from the URL, so we could fetch the Tag object from the database ourselves. However, the ModelViewSet class provides a helper method that will do that for us – get_object() – so we use that instead.
+    tag = self.get_object()
+
+    # Since PostSerializer uses a HyperlinkRelatedField it needs access to the current request so we need to pass that in a context dictionary. 
+    post_serializer = PostSerializer(tag.posts, many=True, context={"request":request})
+    #--------------------how tag.posts is retrieved-------------------------------
+    return Response(post_serializer.data)

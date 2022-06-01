@@ -291,15 +291,17 @@ class Dev(Configuration):
 
   #Token Authentication
   REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": [
+    #   https://stackoverflow.com/questions/39923384/str-object-is-not-callable-django-rest-framework
+    # switched from dictionary to tuple
+    "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
-    ],
-    "DEFAULT_PERMISSION_CLASSES": [
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
     #   "rest_framework.permissions.IsAuthenticated",
       "rest_framework.permissions.IsAuthenticatedOrReadOnly",
-    ]
+    )
   }
 
   #drf-yasg settings

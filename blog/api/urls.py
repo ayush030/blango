@@ -1,7 +1,8 @@
 from django.urls import path, include
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import PostList, PostDetail, UserDetail
+# from .views import PostList, PostDetail
+from blog.api.views import UserDetail, TagViewSet, PostViewSet
 import rest_framework.urls
 
 #for auth token
@@ -13,9 +14,15 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 import os
 
+
+#routers for viewset
+from rest_framework.routers import DefaultRouter
+
+
 urlpatterns= [
-  path('posts/',  PostList.as_view(), name='api_post_list'),
-  path('posts/<int:pk>', PostDetail.as_view(), name="api_post_detail"),
+  # added viewsets for Post hence, omitted urls for individual post views. Router and endpoint are defined below
+  # path('posts/',  PostList.as_view(), name='api_post_list'),
+  # path('posts/<int:pk>', PostDetail.as_view(), name="api_post_detail"),
   path("users/<str:email>", UserDetail.as_view(), name="api_user_detail"),
 ]
 
@@ -49,3 +56,13 @@ urlpatterns += [
 
 #to retrieve json information of the models.  DRF will detect that you have the login URL configured and automatically add a link to log in in the top right corner of a DRF view page.
 # urlpatterns= format_suffix_patterns(urlpatterns)
+
+#registering viewsets for endpoint of TagViewSet 
+router = DefaultRouter()
+
+router.register("tags", TagViewSet)     #here tag is the endpoint url
+router.register("posts", PostViewSet)
+
+urlpatterns += [
+    path("", include(router.urls)),
+]
