@@ -24,7 +24,7 @@ urlpatterns= [
   # path('posts/',  PostList.as_view(), name='api_post_list'),
   # path('posts/<int:pk>', PostDetail.as_view(), name="api_post_detail"),
   path("users/<str:email>", UserDetail.as_view(), name="api_user_detail"),
-]
+  ]
 
 
 #schema view for drf swagger UI using drf_yasg
@@ -60,9 +60,10 @@ urlpatterns += [
 #registering viewsets for endpoint of TagViewSet 
 router = DefaultRouter()
 
-router.register("tags", TagViewSet)     #here tag is the endpoint url
+router.register("tags", TagViewSet)     #here tags is the endpoint url
 router.register("posts", PostViewSet)
 
 urlpatterns += [
     path("", include(router.urls)),
+    path("posts/by-time/<str:period_name>/", PostViewSet.as_view({"get": "list"}), name="posts-by-time",),
 ]
