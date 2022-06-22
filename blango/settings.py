@@ -87,6 +87,7 @@ class Dev(Configuration):
       
       'rest_framework', #DRF
       'rest_framework.authtoken',   #DRF token authentication
+      'django_filters',    #3rd party queryset filter
 
       #drf swagger UI
       'drf_yasg', 
@@ -316,6 +317,15 @@ class Dev(Configuration):
         'user_sustained' : '5000/day',
         'user_burst' : '100/minute',
     },
+
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 100,
+
+    "DEFAULT_FILTER_BACKENDS": [
+      "django_filters.rest_framework.DjangoFilterBackend",
+      #Custom ordering of results returned in DRF
+      "rest_framework.filters.OrderingFilter",
+    ],
   }
 
   #drf-yasg settings

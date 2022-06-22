@@ -47,7 +47,8 @@ class PostApiTestCase(TestCase):
 
   def test_post_list(self):
     resp = self.client.get("/api/v1/posts/")
-    data = resp.json()
+    # data=resp.json() #-- omitted due to pagination
+    data = resp.json()["results"] 
 
     self.assertEqual(len(data), 2)
 
@@ -94,6 +95,7 @@ class PostApiTestCase(TestCase):
 
     resp = self.client.post("/api/v1/posts/", post_dict)
     data = resp.json()
+    # data = resp.json()["results"] 
     
     post_id = data["id"]
     post = Post.objects.get(pk=post_id)

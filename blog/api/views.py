@@ -36,6 +36,9 @@ from django.utils import timezone
 from datetime import timedelta
 from django.http import Http404
 
+#filtering by django-filter.rest_framework
+from .filters import PostFilterSet
+
 #generic implementation using APIView 
 
 # class PostList(generics.ListCreateAPIView):
@@ -63,6 +66,12 @@ from django.http import Http404
 class PostViewSet(viewsets.ModelViewSet):
   queryset = Post.objects.all()
   permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject]
+  filterset_class = PostFilterSet 
+
+  # By default, all readable serialized fields are available for ordering
+  ordering_fields = ["published_at", "author", "title", "slug"]
+
+  filterset_fields = ["author", "tags"]
 
   def get_serializer_class(self):
     if self.action in ("list", "create"):
@@ -78,7 +87,15 @@ class PostViewSet(viewsets.ModelViewSet):
   def mine(self, request):
     if request.user.is_anonymous:
       raise PermissionDenied("You must be logged in to see which Posts are yours")
+    
     posts = self.get_queryset().filter(author=request.user)
+    
+    # applying pagination to mine method - user defined viewset method
+    page = self.paginate_queryset(posts) # adds paging paraphernalia to the existing queryset
+    if page is not None:
+      serializer = PostSerializer(page, many=True, context={"request": request})
+      return self.get_paginated_response(serializer.data)
+    
     serializer = PostSerializer(posts, many=True, context={"request":request})
     return Response(serializer.data)
   
@@ -142,10 +159,16 @@ class TagViewSet(viewsets.ModelViewSet):
   def posts(self, request, pk=None):
     # We have access to the pk from the URL, so we could fetch the Tag object from the database ourselves. However, the ModelViewSet class provides a helper method that will do that for us – get_object() – so we use that instead.
     tag = self.get_object()
+    
+    # applying pagination to mine method - user defined viewset method
+    page = self.paginate_queryset(tag.posts)  # adds paging paraphernalia to the existing queryset
+    if page is not None:
+      post_serializer = PostSerializer(page, many=True, context={"request":request})
+      return self.get_paginated_response(post_serializer.data)
 
     # Since PostSerializer uses a HyperlinkRelatedField it needs access to the current request so we need to pass that in a context dictionary. 
     post_serializer = PostSerializer(tag.posts, many=True, context={"request":request})
-    #--------------------how tag.posts is retrieved-------------------------------
+    #--------------------how tag.posts is retrieved: from the name field set in the models-------------------------------
     return Response(post_serializer.data)
 
 
