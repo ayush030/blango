@@ -18,6 +18,9 @@ import os
 #routers for viewset
 from rest_framework.routers import DefaultRouter
 
+#SimpleJWT urls
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 
 urlpatterns= [
   # added viewsets for Post hence, omitted urls for individual post views. Router and endpoint are defined below
@@ -52,6 +55,14 @@ urlpatterns += [
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),
+
+    #simpleJWT urls
+
+    #to get token from password credentials
+    path('jwt/', TokenObtainPairView.as_view(), name="jwt_obtain_pair"), 
+
+    #to refresh access token using refresh token
+    path("jwt/refresh", TokenRefreshView.as_view(), name="jwt_refresh"),
 ]
 
 #to retrieve json information of the models.  DRF will detect that you have the login URL configured and automatically add a link to log in in the top right corner of a DRF view page.
