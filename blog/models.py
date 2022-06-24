@@ -4,6 +4,8 @@ from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 
+# importing versatileimagefield and primarypointofinterest field from 3 party library
+from versatileimagefield.fields import VersatileImageField, PPOIField
 
 
 # Create your models here.
@@ -54,6 +56,13 @@ class Post(models.Model):
   tags = models.ManyToManyField(Tag, related_name="posts")
 
   comments = GenericRelation(Comment)
+
+  hero_image = VersatileImageField(
+    upload_to='hero_images', ppoi_field='ppoi', null=True, blank=True
+  )
+  # upload_to argument so that hero images will be automatically uploaded to the directory hero_images inside the MEDIA_ROOT
+
+  ppoi = PPOIField(null=True, blank=True)
 
   class Meta:
     ordering =["created_at"]

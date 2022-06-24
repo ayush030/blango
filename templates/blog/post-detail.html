@@ -9,6 +9,13 @@
     {% endcol %}
 {% endrow %}
 {% row %}
+    {% if post.hero_image %}
+        {% row %}
+            {% col %}
+            <img class='img-fluid' src='{{post.hero_image.url}}'>
+            {% endcol %}
+        {% endrow %}
+    {% endif %}
     {% col %}
         {{ post.content|safe }}
     {% endcol %}

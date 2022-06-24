@@ -89,6 +89,7 @@ class Dev(Configuration):
       'rest_framework', #DRF
       'rest_framework.authtoken',   #DRF token authentication
       'django_filters',    #3rd party queryset filter
+      'versatileimagefield', # image field managing library
 
       #drf swagger UI
       'drf_yasg', 
@@ -345,13 +346,14 @@ class Dev(Configuration):
         }
     }
 
+  #configuration of media directory
 
+  # uploaded files are saved. 
+  MEDIA_ROOT = BASE_DIR / "media"
 
-    
+  # URL/path to serve media from
+  MEDIA_URL = "/media/"
 
-
-
-  
 
 
 class Prod(Dev):
